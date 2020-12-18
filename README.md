@@ -1,1 +1,3 @@
-# Entropy-Explained
+Alternative classification metric akin to R^2 variance explained regression metric. Describes propotion of uncertainty in bits that is reduced by your model from the baseline performance of predicting the average probability value for all observational units. Metric range is typically from zero to one, with a higher score denoting a higher performing model. Score can sometimes be negative if your model performs worse than the baseline model performance just mentioned.
+
+Handles missing data by omission. Handles input numpy arrays of any dimensional shape, so naturally extending to multi-class problems with ease. Optional *Obs_Weights* parameter akin to *sample_weight* of sklearn's *r2_score()* function.
