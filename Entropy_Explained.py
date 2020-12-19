@@ -1,7 +1,7 @@
 import numpy as np
 
 
-def Entropy_Explained(Y_True, Y_Pred, Obs_Weights=None):
+def Entropy_Explained(Y_True, Y_Pred, Mode='binary', Obs_Weights=None):
     
     #Parameter to undiscretize Y_True/Y_Pred
     Epsilon = 1e-15
@@ -67,6 +67,37 @@ def Entropy_Explained(Y_True, Y_Pred, Obs_Weights=None):
     Y_Pred[Y_Pred < Epsilon] = Epsilon
     Y_Pred[Y_Pred > (1 - Epsilon)] = 1 - Epsilon
     
+    #Compute measures of entropy
+    if Mode == 'binary':
+        
+        #Your model's predictive capability
+        Obs_Residual_CrossEntropy = -1 * (Y_True * np.log(Y_Pred) + (1-Y_True) * np.log(1-Y_Pred))
+        
+        #Worst possible model predictive capability
+        Obs_Baseline_CrossEntropy = -1 * (Y_True * np.log(Baseline_Probability) + (1-Y_True) * np.log(1-Baseline_Probability))
+        
+        #Best possible model predictive capability
+        Obs_Information_Entropy = -1 * (Y_True * np.log(Y_True) + (1-Y_True) * np.log(1-Y_True))
+        
+        pass
+    
+    elif Mode == 'multi-class':
+        
+        #Your model's predictive capability
+        Obs_Residual_CrossEntropy = -1 * Y_True * np.log(Y_Pred)
+        
+        #Worst possible model predictive capability
+        Obs_Baseline_CrossEntropy = -1 * Y_True * np.log(Baseline_Probability)
+        
+        #Best possible model predictive capability
+        Obs_Information_Entropy = -1 * Y_True * np.log(Y_True)
+        
+        pass
+    else:
+        print('Classification Metrics, Entropy Explained: unrecognized value for Mode argument')
+        return None
+    
+    '''
     #Your model's predictive capability
     Obs_Residual_CrossEntropy = -1 * (Y_True * np.log(Y_Pred) + (1-Y_True) * np.log(1-Y_Pred))
     
@@ -75,6 +106,7 @@ def Entropy_Explained(Y_True, Y_Pred, Obs_Weights=None):
     
     #Best possible model predictive capability
     Obs_Information_Entropy = -1 * (Y_True * np.log(Y_True) + (1-Y_True) * np.log(1-Y_True))
+    '''
     
     #Kullback-Leibler divergences for model and baseline
     Obs_KL_Div_Residual = np.abs(Obs_Residual_CrossEntropy - Obs_Information_Entropy)
